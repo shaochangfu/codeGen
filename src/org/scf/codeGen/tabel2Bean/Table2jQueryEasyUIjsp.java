@@ -19,38 +19,33 @@ import org.scf.codeGen.tabel2Bean.jdbc.JDBCUtil;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
+
 /**
- * 根据数据库表生成bean，通过修改48 和 50 行的数据进行调配是单个表还是所有表
- * url 是数据库连接地址
- * targetPath 是文件所存放的位置
- * packagePath 包路径
- * templetePath 末班存放位置
- * 56 行标示生成文件的类型
- * 
- * 通过修改48 和 50 行的数据进行调配是单个表还是所有表
- * @author pccw
+ * 根据表生成基于jquery easy UI的jsp 页面
+ * @author scf
  *
  */
-public class Table2BeanUtil {
+public class Table2jQueryEasyUIjsp {
+
 	private Configuration cfg = null;
 	private final String CODE_FILE_CHARSET = "UTF-8";
 	private String url = "jdbc:mysql://localhost:3306/test?useUnicode=true&amp;characterEncoding=UTF-8";// 数据库连接
 	private String user = "root";
 	private String passwd = "123456";
 	private static Connection con = null;
-	private static String targetPath = "src\\org\\scf\\common\\ipay";
+	private static String targetPath = "src\\org\\scf\\common\\ipay\\jsp";
 	private static String packagePath = "org.scf.common.ipay.bean";
 	//private static String tableStr = "studentscf";
 	private static String templetePath ="src\\org\\scf\\codeGen\\tabel2Bean\\template";
 	
 	public static void main(String[] args) throws Exception {
-		Table2BeanUtil maker = new Table2BeanUtil();
+		Table2jQueryEasyUIjsp maker = new Table2jQueryEasyUIjsp();
 		maker.init();
 		File targetFilepath = new File(targetPath);//+"\\"+tableStr.toLowerCase()
 		if(!targetFilepath.exists()){
 			targetFilepath.mkdirs();
 		}
-		String templateFile = "Bean2.ftl";
+		String templateFile = "jQueryEasyUIjsp.ftl";// 模板文件
 		Map<String,Map> map = JDBCUtil.getTables(con,packagePath);// 获取全部的表
 		//Map<String,Map> map = maker.getAllColumn("test");// 获取表test的数据
 		if(map != null){
@@ -58,7 +53,7 @@ public class Table2BeanUtil {
 			while(it.hasNext()){
 				String key = it.next();
 				Map columnMap = map.get(key);
-				File targetFile = new File(targetFilepath.getPath()+"\\"+firstUpper(key)+"Bean.java");
+				File targetFile = new File(targetFilepath.getPath()+"\\"+firstUpper(key)+".jsp");
 				if(!targetFile.exists()){
 					targetFile.createNewFile();
 				}
@@ -129,4 +124,5 @@ public class Table2BeanUtil {
 		String upperC = c.toUpperCase();
 		return upperC+str.substring(1);
 	}
+
 }

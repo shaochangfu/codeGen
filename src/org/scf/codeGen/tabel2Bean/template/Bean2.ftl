@@ -1,7 +1,7 @@
 package ${packageName};
 /**
 **/
-public class ${beanNameClass} {
+public class ${beanNameClass}Bean {
 	/**
 	**/
 	<#list metaDataList as metaData>
@@ -10,7 +10,7 @@ public class ${beanNameClass} {
 	
 	/**
 	**/
-	public ${beanNameClass}(){
+	public ${beanNameClass}Bean(){
 		super();
 	}
 	

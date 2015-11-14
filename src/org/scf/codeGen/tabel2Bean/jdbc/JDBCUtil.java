@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 public class JDBCUtil {
-	private static String url = "jdbc:mysql://localhost:3306/test?useUnicode=true&amp;characterEncoding=UTF-8";
+	private static String url = "jdbc:mysql://192.168.220.35:3306/wuye_pay_dev?useUnicode=true&amp;characterEncoding=UTF-8";
 	static Connection con = null;
 	public JDBCUtil jDBCUtil = new JDBCUtil();
 	private JDBCUtil(){
@@ -27,7 +27,7 @@ public class JDBCUtil {
 	}
 	public static Connection getConnection(){
 		try {
-			con = DriverManager.getConnection(url , "root" , "pccw" ) ;
+			con = DriverManager.getConnection(url , "pccw" , "pccw" ) ;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -78,7 +78,6 @@ public class JDBCUtil {
 	                    && (rs.getString(4).equalsIgnoreCase("TABLE") || rs  
 	                            .getString(4).equalsIgnoreCase("VIEW"))) {  
 	                String tableName = rs.getString(3).toLowerCase();  // 得到表名
-	                System.out.println(tableName);
 	                Map rootMap = new HashMap();
 	                List list = new ArrayList();
 	                ResultSet colRet = dbMetData.getColumns(null, "%", tableName, "%");
