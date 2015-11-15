@@ -1,7 +1,9 @@
 package ${packageName};
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -36,7 +38,7 @@ public class ${beanNameClass}Controller {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "${beanName}Search", method = RequestMethod.POST)
-	public List<String> checkSearch(Model model,HttpServletRequest request,HttpServletResponse response) {
+	public Map<String,Object> checkSearch(Model model,HttpServletRequest request,HttpServletResponse response) {
 		
 		// 分页查询参数
 		${beanNameClass}Bean ${beanName}Bean = new ${beanNameClass}Bean();
@@ -54,7 +56,11 @@ public class ${beanNameClass}Controller {
 			int detla = Integer.parseInt(rows);
 			int start = (Integer.parseInt(page)-1)*detla;
 			List list = ${beanName}Service.findAllByPage(${beanName}Bean, start, detla);
-			return list;
+			int total = ${beanName}Service.findAllCount(${beanName}Bean);
+			Map<String,Object> map = new HashMap();
+			map.put("total", total);
+			map.put("rows", list);
+			return map;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

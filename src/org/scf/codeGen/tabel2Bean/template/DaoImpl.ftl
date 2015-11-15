@@ -41,9 +41,12 @@ public class ${beanNameClass}DaoImpl extends SqlMapClientDaoSupport implements $
 	}
 	
 	public List<${beanNameClass}Bean> findAllByPage(${beanNameClass}Bean ${beanName}Bean,int start,int detla) {
-		${beanName}.setDetla(detla);
-		${beanName}.setStart(start);
+		${beanName}Bean.setDetla(detla);
+		${beanName}Bean.setStart(start);
 		return getSqlMapClientTemplate().queryForList(NAMESPACE3+"findAllByPage", ${beanName}Bean,start,detla);
 	}
 	
+	public int findAllCount(${beanNameClass}Bean ${beanName}Bean){
+		return (Integer)getSqlMapClientTemplate().queryForObject(NAMESPACE3+"findAllCount", ${beanName}Bean);
+	}
 }

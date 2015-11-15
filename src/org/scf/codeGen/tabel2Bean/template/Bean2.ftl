@@ -1,7 +1,8 @@
 package ${packageName};
+import org.webutils.common.util.PageBean;
 /**
 **/
-public class ${beanNameClass}Bean {
+public class ${beanNameClass}Bean extends PageBean{
 	/**
 	**/
 	<#list metaDataList as metaData>

@@ -60,4 +60,17 @@
 		 </#list>
 		 limit #start#,#detla# ;
 	</select>
+	
+	<!-- 总记录数-->
+	<select id="findAllCount" parameterClass="${beanName}" resultClass="java.lang.Integer">
+		select 
+			count(*) 
+		 from ${beanName} p where 1=1
+		<#list metaDataList as metaData>
+			<isNotEmpty prepend="AND" property="${metaData.fieldName}">
+				 p.${metaData.fieldName} = #${metaData.fieldName}#
+		 	</isNotEmpty>
+		 </#list>
+		 limit #start#,#detla# ;
+	</select>
 </sqlMap>

@@ -29,7 +29,7 @@ public class Table2MyBatisMapper {
 	private String user = "root";
 	private String passwd = "123456";
 	private static Connection con = null;
-	private static String targetPath = "src\\org\\scf\\common\\ipay";
+	private static String targetPath = "src\\org\\scf\\common\\ipay\\mapper";
 	private static String packagePath = "org.scf.common.ipay.bean";
 	//private static String tableStr = "studentscf";
 	private static String templetePath ="src\\org\\scf\\codeGen\\tabel2Bean\\template";

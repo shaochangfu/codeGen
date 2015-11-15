@@ -41,4 +41,11 @@ public interface ${beanNameClass}Dao {
 	 * @return
 	 */
 	public List<${beanNameClass}Bean> findAllByPage(${beanNameClass}Bean ${beanName}Bean,int start,int detla);
+	
+	/**
+	 * 查询总条数
+	 * @param ${beanName}Bean
+	 * @return
+	 */
+	public int findAllCount(${beanNameClass}Bean ${beanName}Bean);
 }

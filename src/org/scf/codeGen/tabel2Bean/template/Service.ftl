@@ -40,4 +40,12 @@ public interface ${beanNameClass}Service {
 	 * @return
 	 */
 	public List<${beanNameClass}Bean> findAllByPage(${beanNameClass}Bean ${beanName}Bean,int start,int detla);
+	
+	/**
+	 * 记录总条数
+	 * @param ${beanName}Bean
+	 * @return
+	 */
+	public int findAllCount(${beanNameClass}Bean ${beanName}Bean);
+	
 }

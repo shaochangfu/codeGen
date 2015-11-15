@@ -31,5 +31,7 @@ public class ${beanNameClass}ServiceImpl implements ${beanNameClass}Service {
 	public List<${beanNameClass}Bean> findAllByPage(${beanNameClass}Bean ${beanName}Bean, int start, int detla) {
 		return ${beanName}Dao.findAllByPage(${beanName}Bean, start, detla);
 	}
-	
+	public int findAllCount(${beanNameClass}Bean ${beanName}Bean) {
+		return ${beanName}Dao.findAllCount(${beanName}Bean);
+	}
 }
