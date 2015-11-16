@@ -19,13 +19,13 @@
 		insert into ${beanName}
 		(
 		<#list metaDataList as metaData>
-			${metaData.fieldName},
+			${metaData.fieldName}<#if metaData_has_next>,</#if>
 		</#list>
 		) 
 		values 
 		(
 		<#list metaDataList as metaData>
-			#${metaData.fieldName}#,
+			#${metaData.fieldName}#<#if metaData_has_next>,</#if>
 		</#list>
 		);
 	</insert>
@@ -34,7 +34,7 @@
 	<update id="update" parameterClass="${beanName}" > 
 		update ${beanName} set 
 		<#list metaDataList as metaData>
-			${metaData.fieldName} = #${metaData.fieldName}# ,
+			${metaData.fieldName} = #${metaData.fieldName}# <#if metaData_has_next>,</#if>
 		</#list>
 		 where id = #id#;
 	</update>
@@ -50,7 +50,7 @@
 	<select id="findAllByPage" parameterClass="${beanName}" resultClass="${beanName}">
 		select 
 			<#list metaDataList as metaData>
-				p.${metaData.fieldName},
+				p.${metaData.fieldName}<#if metaData_has_next>,</#if>
 			</#list>
 		 from ${beanName} p where 1=1
 		<#list metaDataList as metaData>
