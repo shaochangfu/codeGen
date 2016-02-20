@@ -34,75 +34,38 @@ import freemarker.template.Template;
 public class Table2BeanUtil {
 	private Configuration cfg = null;
 	private final String CODE_FILE_CHARSET = "UTF-8";
-	private String url = "jdbc:mysql://localhost:3306/test?useUnicode=true&amp;characterEncoding=UTF-8";// 数据库连接
-	private String user = "root";
-	private String passwd = "123456";
-	private static Connection con = null;
 	private static String targetPath = "src\\org\\scf\\common\\ipay";
 	private static String packagePath = "org.scf.common.ipay.bean";
-	//private static String tableStr = "studentscf";
 	private static String templetePath ="src\\org\\scf\\codeGen\\tabel2Bean\\template";
 	
 	public static void main(String[] args) throws Exception {
+		new Table2BeanUtil().excute();
+	}
+	public void excute() throws Exception {
 		Table2BeanUtil maker = new Table2BeanUtil();
 		maker.init();
-		File targetFilepath = new File(targetPath);//+"\\"+tableStr.toLowerCase()
+		File targetFilepath = new File(targetPath);
 		if(!targetFilepath.exists()){
 			targetFilepath.mkdirs();
 		}
 		String templateFile = "Bean2.ftl";
-		Map<String,Map> map = JDBCUtil.getTables(con,packagePath);// 获取全部的表
-		//Map<String,Map> map = maker.getAllColumn("test");// 获取表test的数据
-		if(map != null){
+		Map<String,Map> map = JDBCUtil.getInstance().getTables(packagePath);// 获取全部的表
+		if(map != null) {
 			Iterator<String> it = map.keySet().iterator();
-			while(it.hasNext()){
+			while (it.hasNext()) {
 				String key = it.next();
 				Map columnMap = map.get(key);
-				File targetFile = new File(targetFilepath.getPath()+"\\"+firstUpper(key)+"Bean.java");
-				if(!targetFile.exists()){
+				File targetFile = new File(targetFilepath.getPath() + "\\" + firstUpper(key) + "Bean.java");
+				if (!targetFile.exists()) {
 					targetFile.createNewFile();
 				}
 				maker.process(columnMap, targetFile, templateFile);
 			}
-//			int len = tableList.size();
-//			for(int i = 1; i<len;i++){
-//				String tableStr = tableList.get(i);
-//				maker.process(maker.getAllColumn(tableStr), targetFile, templateFile);
-//			}
 		}
 	}
-	
 	public void init() throws Exception {
 		cfg = new Configuration();
 		cfg.setDirectoryForTemplateLoading(new File(templetePath));
-		Class.forName("com.mysql.jdbc.Driver");
-		con = DriverManager.getConnection(url , user , passwd ) ;
-	}
-	// 获取指定表的信息
-	public Map getAllColumn(String tableName){
-		Map rootMap = new HashMap();
-		List list = new ArrayList();
-		try {
-			DatabaseMetaData dmd = con.getMetaData();
-			ResultSet rs = dmd.getColumns("","test",tableName, null);
-			while(rs.next()){
-				String fieldName = rs.getString("COLUMN_NAME");
-				String variableType = rs.getString("TYPE_NAME").equals("varchar") ? "String" :"";
-				Map rootMap1 = new HashMap();
-				rootMap1.put("fieldName", fieldName);
-				rootMap1.put("fuFieldName", firstUpper(fieldName));
-				rootMap1.put("variableType", variableType);
-				list.add(rootMap1);
-			}
-			rootMap.put("metaDataList", list);
-			rootMap.put("packageName",packagePath);
-			rootMap.put("beanName", tableName);
-			rootMap.put("beanNameClass", firstUpper(tableName));
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-		return rootMap;
 	}
 	//
 	public void process(Map rootMap,File targetFile,String templateFile) {
@@ -124,6 +87,12 @@ public class Table2BeanUtil {
 			}
 		}
 	}
+
+	/**
+	 * 首字母大写
+	 * @param str
+	 * @return
+     */
 	private static String firstUpper(String str){
 		String c = str.substring(0,1);
 		String upperC = c.toUpperCase();

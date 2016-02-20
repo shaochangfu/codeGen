@@ -1,5 +1,8 @@
 package org.scf.codeGen.tabel2Bean.jdbc;
 
+import org.scf.codeGen.tabel2Bean.util.Constant;
+import org.scf.codeGen.tabel2Bean.util.ProptertiesUtil;
+
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
@@ -11,23 +14,38 @@ import java.util.List;
 import java.util.Map;
 
 public class JDBCUtil {
-	private static String url = "jdbc:mysql://192.168.220.35:3306/wuye_pay_dev?useUnicode=true&amp;characterEncoding=UTF-8";
-	static Connection con = null;
-	public JDBCUtil jDBCUtil = new JDBCUtil();
+
+	private Connection con = null;
+	private static JDBCUtil jDBCUtil ;
 	private JDBCUtil(){
-		super();
-	}
-	
-	static{
+		// 注册数据库驱动
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
+		// 创建数据库连接
+		createConnection();
 	}
-	public static Connection getConnection(){
+	public static JDBCUtil getInstance(){
+		if (jDBCUtil == null){
+			jDBCUtil = new  JDBCUtil();
+		}
+		return jDBCUtil;
+	}
+
+	/**
+	 * 创建数据库连接
+	 * @return
+     */
+	private Connection createConnection(){
+		//读取属性配置文件
+		ProptertiesUtil pro = ProptertiesUtil.getInstance(Constant.cfgFilePath);
+		String url = pro.getValueByKey("url");
+		String username = pro.getValueByKey("username");
+		String passwd = pro.getValueByKey("passwd");
 		try {
-			con = DriverManager.getConnection(url , "pccw" , "pccw" ) ;
+			con = DriverManager.getConnection(url , username , passwd) ;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -40,8 +58,7 @@ public class JDBCUtil {
 			e.printStackTrace();
 		}
 	}
-	
-	
+
 	public static String convertDatabaseCharsetType(String in, String type) {  
         String dbUser;  
         if (in != null) {  
@@ -64,10 +81,10 @@ public class JDBCUtil {
         return dbUser;  
     }  
 	//获取一个数据库的所有表和视图
-	 public static Map<String,Map> getTables(Connection conn,String packagePath) throws SQLException {
+	 public Map<String,Map> getTables(String packagePath) throws SQLException {
 		 Map<String,Map> result = new HashMap<String,Map>();
 		 
-	        DatabaseMetaData dbMetData = conn.getMetaData();  
+	        DatabaseMetaData dbMetData = con.getMetaData();
 	        // mysql convertDatabaseCharsetType null  
 	        ResultSet rs = dbMetData.getTables(null,  
 	                convertDatabaseCharsetType("root", "mysql"), null,  
@@ -94,18 +111,7 @@ public class JDBCUtil {
 	    			rootMap.put("packageName",packagePath);
 	    			rootMap.put("beanName", tableName);
 	    			rootMap.put("beanNameClass", firstUpper(tableName));
-	                // 根据表名提前表里面信息：  
-	               /* ResultSet colRet = dbMetData.getColumns(null, "%", tableName,  
-	                        "%");  
-	                while (colRet.next()) {  
-	                    String columnName = colRet.getString("COLUMN_NAME");  
-	                    String columnType = colRet.getString("TYPE_NAME");  
-	                    int datasize = colRet.getInt("COLUMN_SIZE");  
-	                    int digits = colRet.getInt("DECIMAL_DIGITS");  
-	                    int nullable = colRet.getInt("NULLABLE");  
-	                     System.out.println(columnName + " " + columnType + " "+  
-	                     datasize + " " + digits + " " + nullable);  
-	                }  */
+
 	    			result.put(tableName, rootMap);
 	            } 
 	            
@@ -113,16 +119,7 @@ public class JDBCUtil {
 	        return result;
 	    }  
 	 
-	 public static void main(String[] args) {
-		 con =  getConnection();
-		 try {
-			getTables(con,"");
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		 closeCon(con);
-	}
-	 private static String firstUpper(String str){
+	 private String firstUpper(String str){
 			String c = str.substring(0,1);
 			String upperC = c.toUpperCase();
 			return upperC+str.substring(1);
