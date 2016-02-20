@@ -31,7 +31,7 @@ import org.scf.codeGen.tabel2Bean.util.Constant;
  * @author scf
  *
  */
-public class Table2BeanUtil {
+public class Table2BeanUtil implements Runnable{
 	private  Configuration cfg = null;
 	private  String suffix = ""; // 文件后缀
 	private  String targetPath = ""; // 生成的文件保存位置
@@ -42,8 +42,28 @@ public class Table2BeanUtil {
 	public static void main(String[] args) throws Exception {
 		//new Table2BeanUtil().excute("beanftl");
 	}
-	public void excute(String templateFileCfgt) throws Exception {
-		init(templateFileCfgt);
+
+	public Table2BeanUtil(){}
+	public Table2BeanUtil(String templateFileCfgt){
+		// 初始化模板文件属性配置
+		CommonUtil commonUtil = CommonUtil.getInstance();
+		String [] templateFileCfg = commonUtil.parseTemplateFileCfg(templateFileCfgt);
+		templateFile = templateFileCfg[0];
+		templetePath = templateFileCfg[1];
+		packagePath = templateFileCfg[2];
+		targetPath = templateFileCfg[3];
+		suffix = templateFileCfg[4];
+	}
+
+	@Override
+	public void run() {
+		try {
+			System.out.println(Thread.currentThread().getName()+"正在生成代码。");
+			excute();
+		}catch (Exception ex){ex.printStackTrace();}
+	}
+	public void excute() throws Exception {
+		init();
 		File targetFilepath = new File(targetPath);
 		if(!targetFilepath.exists()){
 			targetFilepath.mkdirs();
@@ -63,16 +83,7 @@ public class Table2BeanUtil {
 			}
 		}
 	}
-	public void init(String templateFileCfgt) throws Exception {
-		// 初始化模板文件属性配置
-		CommonUtil commonUtil = CommonUtil.getInstance();
-		String [] templateFileCfg = commonUtil.parseTemplateFileCfg(templateFileCfgt);
-		templateFile = templateFileCfg[0];
-		templetePath = templateFileCfg[1];
-		packagePath = templateFileCfg[2];
-		targetPath = templateFileCfg[3];
-		suffix = templateFileCfg[4];
-
+	public void init() throws Exception {
 		cfg = new Configuration();
 		cfg.setDirectoryForTemplateLoading(new File(templetePath));
 	}

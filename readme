@@ -1,3 +1,4 @@
 该代码是由freemarker模板根据数据库表生成各类代码。
 freemarker 模板保存在template目录下。
-
+属性配置文件位于src跟目录下的cfg.properties。包括数据库连接url，生成文件的属性。
+生成代码时运行GennerateFile类
