@@ -1,1 +1,3 @@
-dev
+该代码是由freemarker模板根据数据库表生成各类代码。
+freemarker 模板保存在template目录下。
+

@@ -19,51 +19,60 @@ import org.scf.codeGen.tabel2Bean.jdbc.JDBCUtil;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
+import org.scf.codeGen.tabel2Bean.util.CommonUtil;
+import org.scf.codeGen.tabel2Bean.util.Constant;
+
 /**
  * 根据数据库表生成bean，通过修改48 和 50 行的数据进行调配是单个表还是所有表
  * url 是数据库连接地址
  * targetPath 是文件所存放的位置
  * packagePath 包路径
- * templetePath 末班存放位置
- * 56 行标示生成文件的类型
- * 
- * 通过修改48 和 50 行的数据进行调配是单个表还是所有表
- * @author pccw
+ * templetePath 模板存放位置
+ * @author scf
  *
  */
 public class Table2BeanUtil {
-	private Configuration cfg = null;
-	private final String CODE_FILE_CHARSET = "UTF-8";
-	private static String targetPath = "src\\org\\scf\\common\\ipay";
-	private static String packagePath = "org.scf.common.ipay.bean";
-	private static String templetePath ="src\\org\\scf\\codeGen\\tabel2Bean\\template";
-	
+	private  Configuration cfg = null;
+	private  String suffix = ""; // 文件后缀
+	private  String targetPath = ""; // 生成的文件保存位置
+	private  String packagePath = ""; // 文件的包名
+	private  String templetePath =""; // 模板文件路径
+	private  String templateFile = ""; // 模板文件名
+
 	public static void main(String[] args) throws Exception {
-		new Table2BeanUtil().excute();
+		//new Table2BeanUtil().excute("beanftl");
 	}
-	public void excute() throws Exception {
-		Table2BeanUtil maker = new Table2BeanUtil();
-		maker.init();
+	public void excute(String templateFileCfgt) throws Exception {
+		init(templateFileCfgt);
 		File targetFilepath = new File(targetPath);
 		if(!targetFilepath.exists()){
 			targetFilepath.mkdirs();
 		}
-		String templateFile = "Bean2.ftl";
+
 		Map<String,Map> map = JDBCUtil.getInstance().getTables(packagePath);// 获取全部的表
 		if(map != null) {
 			Iterator<String> it = map.keySet().iterator();
 			while (it.hasNext()) {
 				String key = it.next();
 				Map columnMap = map.get(key);
-				File targetFile = new File(targetFilepath.getPath() + "\\" + firstUpper(key) + "Bean.java");
+				File targetFile = new File(targetFilepath.getPath() + "\\" + firstUpper(key) + suffix);
 				if (!targetFile.exists()) {
 					targetFile.createNewFile();
 				}
-				maker.process(columnMap, targetFile, templateFile);
+				process(columnMap, targetFile, templateFile);
 			}
 		}
 	}
-	public void init() throws Exception {
+	public void init(String templateFileCfgt) throws Exception {
+		// 初始化模板文件属性配置
+		CommonUtil commonUtil = CommonUtil.getInstance();
+		String [] templateFileCfg = commonUtil.parseTemplateFileCfg(templateFileCfgt);
+		templateFile = templateFileCfg[0];
+		templetePath = templateFileCfg[1];
+		packagePath = templateFileCfg[2];
+		targetPath = templateFileCfg[3];
+		suffix = templateFileCfg[4];
+
 		cfg = new Configuration();
 		cfg.setDirectoryForTemplateLoading(new File(templetePath));
 	}
@@ -71,7 +80,7 @@ public class Table2BeanUtil {
 	public void process(Map rootMap,File targetFile,String templateFile) {
 		OutputStreamWriter osw = null;
 		try {
-			osw = new OutputStreamWriter(new FileOutputStream(targetFile), CODE_FILE_CHARSET);
+			osw = new OutputStreamWriter(new FileOutputStream(targetFile), Constant.CODE_FILE_CHARSET);
 			Template template = cfg.getTemplate(templateFile);
 			template.process(rootMap, osw);
 			osw.flush();
