@@ -79,7 +79,13 @@ public class Table2BeanUtil implements Runnable{
 				if (!targetFile.exists()) {
 					targetFile.createNewFile();
 				}
-				process(columnMap, targetFile, templateFile);
+				// 多线程生成文件
+				Thread t = new Thread(){
+					public void run() {
+						process(columnMap, targetFile, templateFile);
+					}
+				};
+				t.start();
 			}
 		}
 	}

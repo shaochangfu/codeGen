@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+		PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN"
+		"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="city">
+	
+	<typeAlias alias="city" type="org.webutils.city.CityBean"/>
+	
+	<resultMap id="result" class="org.webutils.city.CityBean">
+			<result property="ID" column="ID" columnIndex="1"/>
+			<result property="Name" column="Name" columnIndex="2"/>
+			<result property="CountryCode" column="CountryCode" columnIndex="3"/>
+			<result property="District" column="District" columnIndex="4"/>
+			<result property="Population" column="Population" columnIndex="5"/>
+	</resultMap>
+	
+	<!-- 插入  -->
+	<insert id="insert" parameterClass="org.webutils.city.CityBean" >
+		insert into city
+		(
+			ID,
+			Name,
+			CountryCode,
+			District,
+			Population
+		) 
+		values 
+		(
+			#ID#,
+			#Name#,
+			#CountryCode#,
+			#District#,
+			#Population#
+		);
+	</insert>
+	
+	<!-- 修改 -->
+	<update id="update" parameterClass="city" > 
+		update city set 
+			ID = #ID# ,
+			Name = #Name# ,
+			CountryCode = #CountryCode# ,
+			District = #District# ,
+			Population = #Population# 
+		 where id = #id#;
+	</update>
+	
+	<!-- 删除 -->
+	
+	<!-- 主键查询 -->
+	<select id="findByPrimaryKey" parameterClass="java.lang.String" resultMap="result">
+		select * from city p where p.id = #id# ;
+	</select>
+	
+	<!-- 分页查询 -->
+	<select id="findAllByPage" parameterClass="city" resultClass="city">
+		select 
+				p.ID,
+				p.Name,
+				p.CountryCode,
+				p.District,
+				p.Population
+		 from city p where 1=1
+			<isNotEmpty prepend="AND" property="ID">
+				 p.ID = #ID#
+		 	</isNotEmpty>
+			<isNotEmpty prepend="AND" property="Name">
+				 p.Name = #Name#
+		 	</isNotEmpty>
+			<isNotEmpty prepend="AND" property="CountryCode">
+				 p.CountryCode = #CountryCode#
+		 	</isNotEmpty>
+			<isNotEmpty prepend="AND" property="District">
+				 p.District = #District#
+		 	</isNotEmpty>
+			<isNotEmpty prepend="AND" property="Population">
+				 p.Population = #Population#
+		 	</isNotEmpty>
+		 limit #start#,#detla# ;
+	</select>
+	
+	<!-- 总记录数-->
+	<select id="findAllCount" parameterClass="city" resultClass="java.lang.Integer">
+		select 
+			count(*) 
+		 from city p where 1=1
+			<isNotEmpty prepend="AND" property="ID">
+				 p.ID = #ID#
+		 	</isNotEmpty>
+			<isNotEmpty prepend="AND" property="Name">
+				 p.Name = #Name#
+		 	</isNotEmpty>
+			<isNotEmpty prepend="AND" property="CountryCode">
+				 p.CountryCode = #CountryCode#
+		 	</isNotEmpty>
+			<isNotEmpty prepend="AND" property="District">
+				 p.District = #District#
+		 	</isNotEmpty>
+			<isNotEmpty prepend="AND" property="Population">
+				 p.Population = #Population#
+		 	</isNotEmpty>
+		 limit #start#,#detla# ;
+	</select>
+</sqlMap>

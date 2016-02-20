@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+		PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN"
+		"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="country">
+	
+	<typeAlias alias="country" type="org.webutils.country.CountryBean"/>
+	
+	<resultMap id="result" class="org.webutils.country.CountryBean">
+			<result property="Code" column="Code" columnIndex="1"/>
+			<result property="Name" column="Name" columnIndex="2"/>
+			<result property="Continent" column="Continent" columnIndex="3"/>
+			<result property="Region" column="Region" columnIndex="4"/>
+			<result property="SurfaceArea" column="SurfaceArea" columnIndex="5"/>
+			<result property="IndepYear" column="IndepYear" columnIndex="6"/>
+			<result property="Population" column="Population" columnIndex="7"/>
+			<result property="LifeExpectancy" column="LifeExpectancy" columnIndex="8"/>
+			<result property="GNP" column="GNP" columnIndex="9"/>
+			<result property="GNPOld" column="GNPOld" columnIndex="10"/>
+			<result property="LocalName" column="LocalName" columnIndex="11"/>
+			<result property="GovernmentForm" column="GovernmentForm" columnIndex="12"/>
+			<result property="HeadOfState" column="HeadOfState" columnIndex="13"/>
+			<result property="Capital" column="Capital" columnIndex="14"/>
+			<result property="Code2" column="Code2" columnIndex="15"/>
+	</resultMap>
+	
+	<!-- 插入  -->
+	<insert id="insert" parameterClass="org.webutils.country.CountryBean" >
+		insert into country
+		(
+			Code,
+			Name,
+			Continent,
+			Region,
+			SurfaceArea,
+			IndepYear,
+			Population,
+			LifeExpectancy,
+			GNP,
+			GNPOld,
+			LocalName,
+			GovernmentForm,
+			HeadOfState,
+			Capital,
+			Code2
+		) 
+		values 
+		(
+			#Code#,
+			#Name#,
+			#Continent#,
+			#Region#,
+			#SurfaceArea#,
+			#IndepYear#,
+			#Population#,
+			#LifeExpectancy#,
+			#GNP#,
+			#GNPOld#,
+			#LocalName#,
+			#GovernmentForm#,
+			#HeadOfState#,
+			#Capital#,
+			#Code2#
+		);
+	</insert>
+	
+	<!-- 修改 -->
+	<update id="update" parameterClass="country" > 
+		update country set 
+			Code = #Code# ,
+			Name = #Name# ,
+			Continent = #Continent# ,
+			Region = #Region# ,
+			SurfaceArea = #SurfaceArea# ,
+			IndepYear = #IndepYear# ,
+			Population = #Population# ,
+			LifeExpectancy = #LifeExpectancy# ,
+			GNP = #GNP# ,
+			GNPOld = #GNPOld# ,
+			LocalName = #LocalName# ,
+			GovernmentForm = #GovernmentForm# ,
+			HeadOfState = #HeadOfState# ,
+			Capital = #Capital# ,
+			Code2 = #Code2# 
+		 where id = #id#;
+	</update>
+	
+	<!-- 删除 -->
+	
+	<!-- 主键查询 -->
+	<select id="findByPrimaryKey" parameterClass="java.lang.String" resultMap="result">
+		select * from country p where p.id = #id# ;
+	</select>
+	
+	<!-- 分页查询 -->
+	<select id="findAllByPage" parameterClass="country" resultClass="country">
+		select 
+				p.Code,
+				p.Name,
+				p.Continent,
+				p.Region,
+				p.SurfaceArea,
+				p.IndepYear,
+				p.Population,
+				p.LifeExpectancy,
+				p.GNP,
+				p.GNPOld,
+				p.LocalName,
+				p.GovernmentForm,
+				p.HeadOfState,
+				p.Capital,
+				p.Code2
+		 from country p where 1=1
+			<isNotEmpty prepend="AND" property="Code">
+				 p.Code = #Code#
+		 	</isNotEmpty>
+			<isNotEmpty prepend="AND" property="Name">
+				 p.Name = #Name#
+		 	</isNotEmpty>
+			<isNotEmpty prepend="AND" property="Continent">
+				 p.Continent = #Continent#
+		 	</isNotEmpty>
+			<isNotEmpty prepend="AND" property="Region">
+				 p.Region = #Region#
+		 	</isNotEmpty>
+			<isNotEmpty prepend="AND" property="SurfaceArea">
+				 p.SurfaceArea = #SurfaceArea#
+		 	</isNotEmpty>
+			<isNotEmpty prepend="AND" property="IndepYear">
+				 p.IndepYear = #IndepYear#
+		 	</isNotEmpty>
+			<isNotEmpty prepend="AND" property="Population">
+				 p.Population = #Population#
+		 	</isNotEmpty>
+			<isNotEmpty prepend="AND" property="LifeExpectancy">
+				 p.LifeExpectancy = #LifeExpectancy#
+		 	</isNotEmpty>
+			<isNotEmpty prepend="AND" property="GNP">
+				 p.GNP = #GNP#
+		 	</isNotEmpty>
+			<isNotEmpty prepend="AND" property="GNPOld">
+				 p.GNPOld = #GNPOld#
+		 	</isNotEmpty>
+			<isNotEmpty prepend="AND" property="LocalName">
+				 p.LocalName = #LocalName#
+		 	</isNotEmpty>
+			<isNotEmpty prepend="AND" property="GovernmentForm">
+				 p.GovernmentForm = #GovernmentForm#
+		 	</isNotEmpty>
+			<isNotEmpty prepend="AND" property="HeadOfState">
+				 p.HeadOfState = #HeadOfState#
+		 	</isNotEmpty>
+			<isNotEmpty prepend="AND" property="Capital">
+				 p.Capital = #Capital#
+		 	</isNotEmpty>
+			<isNotEmpty prepend="AND" property="Code2">
+				 p.Code2 = #Code2#
+		 	</isNotEmpty>
+		 limit #start#,#detla# ;
+	</select>
+	
+	<!-- 总记录数-->
+	<select id="findAllCount" parameterClass="country" resultClass="java.lang.Integer">
+		select 
+			count(*) 
+		 from country p where 1=1
+			<isNotEmpty prepend="AND" property="Code">
+				 p.Code = #Code#
+		 	</isNotEmpty>
+			<isNotEmpty prepend="AND" property="Name">
+				 p.Name = #Name#
+		 	</isNotEmpty>
+			<isNotEmpty prepend="AND" property="Continent">
+				 p.Continent = #Continent#
+		 	</isNotEmpty>
+			<isNotEmpty prepend="AND" property="Region">
+				 p.Region = #Region#
+		 	</isNotEmpty>
+			<isNotEmpty prepend="AND" property="SurfaceArea">
+				 p.SurfaceArea = #SurfaceArea#
+		 	</isNotEmpty>
+			<isNotEmpty prepend="AND" property="IndepYear">
+				 p.IndepYear = #IndepYear#
+		 	</isNotEmpty>
+			<isNotEmpty prepend="AND" property="Population">
+				 p.Population = #Population#
+		 	</isNotEmpty>
+			<isNotEmpty prepend="AND" property="LifeExpectancy">
+				 p.LifeExpectancy = #LifeExpectancy#
+		 	</isNotEmpty>
+			<isNotEmpty prepend="AND" property="GNP">
+				 p.GNP = #GNP#
+		 	</isNotEmpty>
+			<isNotEmpty prepend="AND" property="GNPOld">
+				 p.GNPOld = #GNPOld#
+		 	</isNotEmpty>
+			<isNotEmpty prepend="AND" property="LocalName">
+				 p.LocalName = #LocalName#
+		 	</isNotEmpty>
+			<isNotEmpty prepend="AND" property="GovernmentForm">
+				 p.GovernmentForm = #GovernmentForm#
+		 	</isNotEmpty>
+			<isNotEmpty prepend="AND" property="HeadOfState">
+				 p.HeadOfState = #HeadOfState#
+		 	</isNotEmpty>
+			<isNotEmpty prepend="AND" property="Capital">
+				 p.Capital = #Capital#
+		 	</isNotEmpty>
+			<isNotEmpty prepend="AND" property="Code2">
+				 p.Code2 = #Code2#
+		 	</isNotEmpty>
+		 limit #start#,#detla# ;
+	</select>
+</sqlMap>

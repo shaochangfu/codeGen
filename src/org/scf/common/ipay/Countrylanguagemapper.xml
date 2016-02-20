@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+		PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN"
+		"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="countrylanguage">
+	
+	<typeAlias alias="countrylanguage" type="org.webutils.countrylanguage.CountrylanguageBean"/>
+	
+	<resultMap id="result" class="org.webutils.countrylanguage.CountrylanguageBean">
+			<result property="CountryCode" column="CountryCode" columnIndex="1"/>
+			<result property="Language" column="Language" columnIndex="2"/>
+			<result property="IsOfficial" column="IsOfficial" columnIndex="3"/>
+			<result property="Percentage" column="Percentage" columnIndex="4"/>
+	</resultMap>
+	
+	<!-- 插入  -->
+	<insert id="insert" parameterClass="org.webutils.countrylanguage.CountrylanguageBean" >
+		insert into countrylanguage
+		(
+			CountryCode,
+			Language,
+			IsOfficial,
+			Percentage
+		) 
+		values 
+		(
+			#CountryCode#,
+			#Language#,
+			#IsOfficial#,
+			#Percentage#
+		);
+	</insert>
+	
+	<!-- 修改 -->
+	<update id="update" parameterClass="countrylanguage" > 
+		update countrylanguage set 
+			CountryCode = #CountryCode# ,
+			Language = #Language# ,
+			IsOfficial = #IsOfficial# ,
+			Percentage = #Percentage# 
+		 where id = #id#;
+	</update>
+	
+	<!-- 删除 -->
+	
+	<!-- 主键查询 -->
+	<select id="findByPrimaryKey" parameterClass="java.lang.String" resultMap="result">
+		select * from countrylanguage p where p.id = #id# ;
+	</select>
+	
+	<!-- 分页查询 -->
+	<select id="findAllByPage" parameterClass="countrylanguage" resultClass="countrylanguage">
+		select 
+				p.CountryCode,
+				p.Language,
+				p.IsOfficial,
+				p.Percentage
+		 from countrylanguage p where 1=1
+			<isNotEmpty prepend="AND" property="CountryCode">
+				 p.CountryCode = #CountryCode#
+		 	</isNotEmpty>
+			<isNotEmpty prepend="AND" property="Language">
+				 p.Language = #Language#
+		 	</isNotEmpty>
+			<isNotEmpty prepend="AND" property="IsOfficial">
+				 p.IsOfficial = #IsOfficial#
+		 	</isNotEmpty>
+			<isNotEmpty prepend="AND" property="Percentage">
+				 p.Percentage = #Percentage#
+		 	</isNotEmpty>
+		 limit #start#,#detla# ;
+	</select>
+	
+	<!-- 总记录数-->
+	<select id="findAllCount" parameterClass="countrylanguage" resultClass="java.lang.Integer">
+		select 
+			count(*) 
+		 from countrylanguage p where 1=1
+			<isNotEmpty prepend="AND" property="CountryCode">
+				 p.CountryCode = #CountryCode#
+		 	</isNotEmpty>
+			<isNotEmpty prepend="AND" property="Language">
+				 p.Language = #Language#
+		 	</isNotEmpty>
+			<isNotEmpty prepend="AND" property="IsOfficial">
+				 p.IsOfficial = #IsOfficial#
+		 	</isNotEmpty>
+			<isNotEmpty prepend="AND" property="Percentage">
+				 p.Percentage = #Percentage#
+		 	</isNotEmpty>
+		 limit #start#,#detla# ;
+	</select>
+</sqlMap>
