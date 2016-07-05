@@ -100,19 +100,32 @@ public class JDBCUtil {
 	                ResultSet colRet = dbMetData.getColumns(null, "%", tableName, "%");
 	                while(colRet.next()){
 	    				String fieldName = colRet.getString("COLUMN_NAME");
-	    				String variableType = colRet.getString("TYPE_NAME").equals("varchar") ? "String" :"int";
+	    				String variableType = "String";
+	    				String jdbcType = colRet.getString("TYPE_NAME") == null ? "varchar":colRet.getString("TYPE_NAME");
+	    				if(jdbcType.equals("varchar")){
+	    					variableType = "String";
+	    					jdbcType = jdbcType.toUpperCase();
+	    				}else if(jdbcType.equals("datetime") || jdbcType.equals("timestamp")){
+	    					variableType = "java.util.Date";
+	    					jdbcType = "TIMESTAMP";
+	    				}else if(jdbcType.equals("int")){
+	    					variableType = "Integer";
+	    				}
+	    				//String variableType = colRet.getString("TYPE_NAME").equals("varchar") ? "String" :"Integer";
 	    				Map rootMap1 = new HashMap();
 	    				rootMap1.put("fieldName", fieldName);
 	    				rootMap1.put("fuFieldName", firstUpper(fieldName));
 	    				rootMap1.put("variableType", variableType);
+	    				rootMap1.put("jdbcType",jdbcType);
 	    				list.add(rootMap1);
 	    			}
 	    			rootMap.put("metaDataList", list);
 	    			rootMap.put("packageName",packagePath);
-	    			rootMap.put("beanName", tableName);
-	    			rootMap.put("beanNameClass", firstUpper(tableName));
+	    			rootMap.put("beanName", tableName.replace("_", ""));
+	    			rootMap.put("beanNameClass", firstUpper(tableName.replace("_", "")));
+	    			rootMap.put("tableName", tableName);
 
-	    			result.put(tableName, rootMap);
+	    			result.put(tableName.replace("_", ""), rootMap);
 	            } 
 	            
 	        }  
@@ -123,6 +136,8 @@ public class JDBCUtil {
 			String c = str.substring(0,1);
 			String upperC = c.toUpperCase();
 			return upperC+str.substring(1);
-		}
+	}
+	
+	
 	
 }

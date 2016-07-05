@@ -40,7 +40,7 @@ public class Table2BeanUtil implements Runnable{
 	private  String templateFile = ""; // 模板文件名
 
 	public static void main(String[] args) throws Exception {
-		//new Table2BeanUtil().excute("beanftl");
+		new Table2BeanUtil("mybatisMapperftl").excute();
 	}
 
 	public Table2BeanUtil(){}
@@ -74,8 +74,8 @@ public class Table2BeanUtil implements Runnable{
 			Iterator<String> it = map.keySet().iterator();
 			while (it.hasNext()) {
 				String key = it.next();
-				Map columnMap = map.get(key);
-				File targetFile = new File(targetFilepath.getPath() + "\\" + firstUpper(key) + suffix);
+				final Map columnMap = map.get(key);
+				final File targetFile = new File(targetFilepath.getPath() + "\\" + firstUpper(key) + suffix);
 				if (!targetFile.exists()) {
 					targetFile.createNewFile();
 				}
